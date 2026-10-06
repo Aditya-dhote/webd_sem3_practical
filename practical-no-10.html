@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Appointment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-blue-50 min-h-screen">
+
+    <header class="bg-blue-600 text-white text-center p-6 shadow">
+        <h1 class="text-3xl font-bold">Doctor Appointment Booking</h1>
+        <p class="mt-1">Book your appointment easily</p>
+    </header>
+
+    <main class="max-w-2xl mx-auto p-5">
+
+        <section class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4">Book Appointment</h2>
+
+            <div class="grid sm:grid-cols-2 gap-3">
+
+                <input id="name" type="text"
+                    placeholder="Patient Name"
+                    class="border p-3 rounded-lg">
+
+                <input id="phone" type="tel"
+                    placeholder="Contact Number"
+                    class="border p-3 rounded-lg">
+
+                <select id="doctor" class="border p-3 rounded-lg">
+                    <option value="">Select Doctor</option>
+                    <option>Dr. Sharma - General Physician</option>
+                    <option>Dr. Patil - Dentist</option>
+                    <option>Dr. Khan - Cardiologist</option>
+                </select>
+
+                <input id="date" type="date"
+                    class="border p-3 rounded-lg">
+
+                <select id="time" class="border p-3 rounded-lg">
+                    <option value="">Select Time</option>
+                    <option>10:00 AM</option>
+                    <option>12:00 PM</option>
+                    <option>03:00 PM</option>
+                    <option>05:00 PM</option>
+                </select>
+
+            </div>
+
+            <button onclick="bookAppointment()"
+                class="mt-5 w-full bg-blue-600 text-white p-3
+                       rounded-lg hover:bg-blue-700">
+                Book Appointment
+            </button>
+        </section>
+
+
+        <section class="bg-white p-6 rounded-xl shadow-md mt-6">
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Appointments</h2>
+
+                <span id="count"
+                    class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
+                    0
+                </span>
+            </div>
+
+            <div id="appointmentList" class="space-y-3">
+                <p id="empty" class="text-center text-gray-500">
+                    No appointments booked.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        let appointments = [];
+
+        function bookAppointment() {
+
+            let name = document.getElementById("name").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let doctor = document.getElementById("doctor").value;
+            let date = document.getElementById("date").value;
+            let time = document.getElementById("time").value;
+
+            if (!name || !phone || !doctor || !date || !time) {
+                alert("Please fill all details.");
+                return;
+            }
+
+            appointments.push({
+                name, phone, doctor, date, time
+            });
+
+            document.getElementById("name").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("doctor").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("time").value = "";
+
+            displayAppointments();
+        }
+
+
+        function displayAppointments() {
+
+            let list = document.getElementById("appointmentList");
+
+            list.innerHTML = "";
+
+            if (appointments.length === 0) {
+                list.innerHTML =
+                    '<p class="text-center text-gray-500">' +
+                    'No appointments booked.</p>';
+            }
+
+            appointments.forEach(function(app, index) {
+
+                let card = document.createElement("div");
+
+                card.className =
+                    "border rounded-lg p-4 bg-blue-50 " +
+                    "flex justify-between items-center";
+
+                card.innerHTML = `
+                    <div>
+                        <h3 class="font-bold">${app.name}</h3>
+                        <p class="text-sm text-gray-600">
+                            ${app.doctor}
+                        </p>
+                        <p class="text-sm text-gray-600">
+                            ${app.date} | ${app.time}
+                        </p>
+                        <p class="text-sm text-gray-600">
+                            Contact: ${app.phone}
+                        </p>
+                    </div>
+
+                    <button onclick="cancelAppointment(${index})"
+                        class="bg-red-500 text-white px-3 py-2 rounded-lg">
+                        Cancel
+                    </button>
+                `;
+
+                list.appendChild(card);
+            });
+
+            document.getElementById("count").textContent =
+                appointments.length;
+        }
+
+
+        function cancelAppointment(index) {
+
+            appointments.splice(index, 1);
+            displayAppointments();
+
+        }
+
+    </script>
+
+</body>
+</html>
